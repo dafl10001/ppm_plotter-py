@@ -1,4 +1,5 @@
 from typing import Callable
+import time
 
 class Renderer:
     def __init__(self, width: int, height: int):
@@ -59,8 +60,18 @@ class Renderer:
             i += self.step
     
     def renderShaderFunction(self, func: Callable[[float, float, float, float], float]):
+        print()
+        first = time.time()
         for y in range(self.height):
             for x in range(self.width):
                 val = func(x, y, self.width, self.height)
                 clampedVal = max(0, min(255, int(val)))
                 self.frame[y * self.width + x] = clampedVal
+
+                frame = y * self.width + x + 1
+
+                now = time.time()
+                time_elapsed = now - first
+                fps = time_elapsed / frame
+
+                print(f"\x1b[AFrame {frame} / {self.height * self.width} ({fps})")
