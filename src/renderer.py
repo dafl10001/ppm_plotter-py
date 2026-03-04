@@ -1,5 +1,6 @@
 from typing import Callable
 import time
+import utils
 
 class Renderer:
     def __init__(self, width: int, height: int):
@@ -68,10 +69,21 @@ class Renderer:
                 clampedVal = max(0, min(255, int(val)))
                 self.frame[y * self.width + x] = clampedVal
 
+                total_pixels = self.width * self.height
+
                 frame = y * self.width + x + 1
 
                 now = time.time()
                 time_elapsed = now - first
-                fps = time_elapsed / frame
 
-                print(f"\x1b[AFrame {frame} / {self.height * self.width} ({fps})")
+                if time_elapsed > 0:
+                    pps = frame / time_elapsed
+                    pixels_remaining = total_pixels - frame
+                    time_left = round(pixels_remaining / pps)
+                else:
+                    time_left = 0
+
+                if frame % 1000 == 0 or frame == total_pixels:
+                    print(f"\x1b[A{frame} / {total_pixels} [{'#' * (frame * 50 // total_pixels)}{'-' * (50 - frame * 50 // total_pixels)}] (ETA T-{utils.seconds_to_time(time_left * 1000)})    ")
+        
+        print(f"Rendering took {utils.seconds_to_time((now - first) * 1000, show_ms=True)}")

@@ -46,7 +46,7 @@ def sierpinski_shader(x, y, w, h):
     return 0
 
 if __name__ == "__main__":
-    renderer = r.Renderer(3000, 2000)
+    renderer = r.Renderer(3840, 2160)
 
     renderer.maxBound = 10
     renderer.minBound = 0
