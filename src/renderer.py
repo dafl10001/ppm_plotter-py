@@ -61,6 +61,8 @@ class Renderer:
             i += self.step
     
     def renderShaderFunction(self, func: Callable[[float, float, float, float], float]):
+        estimated_time = utils.estimate_time(self.width * self.height)
+        print(f"Estimating generation to take {utils.seconds_to_time(estimated_time, show_ms=True)}")
         print()
         first = time.time()
         for y in range(self.height):
@@ -86,4 +88,4 @@ class Renderer:
                 if frame % 1000 == 0 or frame == total_pixels:
                     print(f"\x1b[A{frame} / {total_pixels} [{'#' * (frame * 50 // total_pixels)}{'-' * (50 - frame * 50 // total_pixels)}] (ETA T-{utils.seconds_to_time(time_left * 1000)})    ")
         
-        print(f"Rendering took {utils.seconds_to_time((now - first) * 1000, show_ms=True)}")
+        print(f"Rendering took {utils.seconds_to_time((now - first) * 1000, show_ms=True)}. ({utils.seconds_to_time((now - first) * 1000 - estimated_time, show_ms=True)} more than expected.)")

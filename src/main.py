@@ -23,6 +23,32 @@ def mandelbrot_shader(x, y, width, height):
             
     return 0 # Point is inside the set
 
+def burning_ship_shader(x, y, width, height):
+    scale = 2
+
+    cx = (x / width) * 3.0 - 1.8  # Shifted right
+    cy = (y / height) * 3.0 - 1.8 # Shifted slightly up
+    
+    cx *= scale
+    cy *= scale
+
+    zx, zy = 0.0, 0.0
+    max_iter = 100
+    
+    for i in range(max_iter):
+        abs_zx = abs(zx)
+        abs_zy = abs(zy)
+        
+        new_zx = abs_zx * abs_zx - abs_zy * abs_zy + cx
+        new_zy = 2 * abs_zx * abs_zy + cy
+        
+        zx, zy = new_zx, new_zy
+        
+        if zx * zx + zy * zy > 4:
+            return int((i / max_iter) * 255)
+            
+    return 0
+
 def sierpinski_shader(x, y, w, h):
     ry = h - y 
     
@@ -46,13 +72,15 @@ def sierpinski_shader(x, y, w, h):
     return 0
 
 if __name__ == "__main__":
-    renderer = r.Renderer(3840, 2160)
+    k_resolution = 0.5
+    renderer = r.Renderer(round(1920 * k_resolution), 
+                          round(1920 * k_resolution))
 
     renderer.maxBound = 10
     renderer.minBound = 0
     renderer.step = 0.1
 
-    renderer.renderShaderFunction(mandelbrot_shader)
+    renderer.renderShaderFunction(burning_ship_shader)
     renderer.writeImage("test.ppm")
 
     os.system("convert test.ppm result.png")

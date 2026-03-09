@@ -24,3 +24,8 @@ def seconds_to_time(milliseconds: int, show_ms=False):
     if show_ms and ms: parts.append(f"{ms}ms")
 
     return " ".join(parts) if parts else ("0ms" if show_ms else "0s")
+
+
+def estimate_time(pixelcount: int):
+    x = pixelcount
+    return (2.62169E-11) * x ** 2 + 0.00523792 * x + 4683.91111
